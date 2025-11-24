@@ -1,0 +1,26 @@
+<%- include('layout', { body: (`
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="text-2xl font-semibold mb-4">Registro</h2>
+    <% if (error) { %>
+      <div class="bg-red-50 text-red-700 p-2 rounded mb-4"><%= error %></div>
+    <% } %>
+    <form method="POST" action="/register" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Nombre</label>
+        <input name="name" required class="w-full border px-3 py-2 rounded" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Correo</label>
+        <input name="email" required class="w-full border px-3 py-2 rounded" type="email" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Contraseña</label>
+        <input name="password" required class="w-full border px-3 py-2 rounded" type="password" />
+      </div>
+      <div class="flex items-center justify-between">
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded">Crear cuenta</button>
+        <a href="/login" class="text-sm text-indigo-600">Ya tengo cuenta</a>
+      </div>
+    </form>
+  </div>
+`) }) %>

@@ -1,0 +1,17 @@
+<%- include('layout', { body: (`
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="text-2xl font-semibold">Bienvenido, <%= userName %></h2>
+    <p class="text-gray-600 mt-2">Esta es la página principal del sistema contable. Desde aquí puedes navegar al módulo de usuarios.</p>
+
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <a href="/users" class="block p-4 bg-indigo-50 rounded hover:bg-indigo-100">
+        <h3 class="font-semibold">Usuarios</h3>
+        <p class="text-sm text-gray-600">Gestionar cuentas de usuario</p>
+      </a>
+      <div class="p-4 bg-green-50 rounded">
+        <h3 class="font-semibold">Contabilidad (placeholder)</h3>
+        <p class="text-sm text-gray-600">Aquí se integrarán módulos contables.</p>
+      </div>
+    </div>
+  </div>
+`) }) %>

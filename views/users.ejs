@@ -1,0 +1,27 @@
+<%- include('layout', { body: (`
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="text-2xl font-semibold mb-4">Usuarios</h2>
+    <table class="w-full table-auto border-collapse">
+      <thead>
+        <tr class="text-left">
+          <th class="p-2">ID</th>
+          <th class="p-2">Nombre</th>
+          <th class="p-2">Correo</th>
+          <th class="p-2">Rol</th>
+          <th class="p-2">Creado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(function(u) { %>
+          <tr class="border-t">
+            <td class="p-2"><%= u.id %></td>
+            <td class="p-2"><%= u.name %></td>
+            <td class="p-2"><%= u.email %></td>
+            <td class="p-2"><%= u.role %></td>
+            <td class="p-2"><%= u.created_at %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+`) }) %>
