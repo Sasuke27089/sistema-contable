@@ -1,22 +1,60 @@
-<%- include('layout', { body: (`
-  <div class="bg-white rounded shadow p-6">
-    <h2 class="text-2xl font-semibold mb-4">Iniciar sesión</h2>
-    <% if (error) { %>
-      <div class="bg-red-50 text-red-700 p-2 rounded mb-4"><%= error %></div>
-    <% } %>
-    <form method="POST" action="/login" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium mb-1">Correo</label>
-        <input name="email" required class="w-full border px-3 py-2 rounded" type="email" />
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iniciar sesión - Sistema Contable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 text-gray-800 min-h-screen">
+    <header class="bg-white shadow">
+      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">SC</div>
+          <div>
+            <h1 class="text-lg font-semibold">Sistema Contable</h1>
+            <p class="text-sm text-gray-500">Gestión y control de usuarios</p>
+          </div>
+        </div>
+        <nav class="text-sm">
+          <% if (session && session.userId) { %>
+            <span class="mr-4">Hola, <%= session.userName %></span>
+            <a href="/dashboard" class="mr-3 text-indigo-600">Dashboard</a>
+            <a href="/users" class="mr-3 text-indigo-600">Usuarios</a>
+            <a href="/logout" class="text-red-500">Cerrar sesión</a>
+          <% } else { %>
+            <a href="/login" class="mr-3 text-indigo-600">Iniciar sesión</a>
+            <a href="/register" class="text-indigo-600">Registro</a>
+          <% } %>
+        </nav>
       </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Contraseña</label>
-        <input name="password" required class="w-full border px-3 py-2 rounded" type="password" />
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6">
+      <div class="bg-white rounded shadow p-6">
+        <h2 class="text-2xl font-semibold mb-4">Iniciar sesión</h2>
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="bg-red-50 text-red-700 p-2 rounded mb-4"><%= error %></div>
+        <% } %>
+        <form method="POST" action="/login" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Correo</label>
+            <input name="email" required class="w-full border px-3 py-2 rounded" type="email" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Contraseña</label>
+            <input name="password" required class="w-full border px-3 py-2 rounded" type="password" />
+          </div>
+          <div class="flex items-center justify-between">
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded">Entrar</button>
+            <a href="/register" class="text-sm text-indigo-600">Crear cuenta</a>
+          </div>
+        </form>
       </div>
-      <div class="flex items-center justify-between">
-        <button class="bg-indigo-600 text-white px-4 py-2 rounded">Entrar</button>
-        <a href="/register" class="text-sm text-indigo-600">Crear cuenta</a>
-      </div>
-    </form>
-  </div>
-`) }) %>
+    </main>
+
+    <footer class="max-w-4xl mx-auto p-6 text-center text-sm text-gray-500">
+      &copy; <%= new Date().getFullYear() %> Sistema Contable
+    </footer>
+  </body>
+</html>

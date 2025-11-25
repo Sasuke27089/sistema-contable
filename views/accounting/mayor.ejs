@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mayor - Sistema Contable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-800 min-h-screen">
+    <!-- HEADER -->
+    <header class="bg-white shadow border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Libro Mayor</h1>
+            <p class="text-sm text-gray-600">Movimientos detallados por cuenta contable</p>
+          </div>
+          <a href="/dashboard" class="text-indigo-600 hover:text-indigo-700 font-medium">← Volver</a>
+        </div>
+        <nav class="text-sm space-x-4 flex flex-wrap">
+          <a href="/accounting/cuentas" class="text-gray-600 hover:text-indigo-600">Cuentas</a>
+          <a href="/accounting/asientos" class="text-gray-600 hover:text-indigo-600">Asientos</a>
+          <a href="/accounting/diario" class="text-gray-600 hover:text-indigo-600">Diario</a>
+          <a href="/accounting/mayor" class="text-blue-600 font-semibold">Mayor</a>
+          <a href="/accounting/balance" class="text-gray-600 hover:text-indigo-600">Balance</a>
+          <a href="/accounting/resultados" class="text-gray-600 hover:text-indigo-600">Resultados</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+      <!-- BARRA DE ACCIONES -->
+      <div class="mb-6 flex justify-between items-center flex-wrap gap-3">
+        <div class="flex gap-2">
+          <button onclick="window.print()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 font-medium flex items-center gap-2 shadow transition">
+            <span>🖨️</span> Imprimir
+          </button>
+          <button onclick="exportarCSV()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium flex items-center gap-2 shadow transition">
+            <span>📥</span> Descargar CSV
+          </button>
+        </div>
+        <a href="/dashboard" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium flex items-center gap-2 shadow transition">
+          <span>🚪</span> Salir
+        </a>
+      </div>
+
+      <!-- SELECTOR DE CUENTA -->
+      <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <label class="block text-sm font-semibold text-gray-900 mb-3">Seleccionar Cuenta</label>
+        <select onchange="window.location.href = '/accounting/mayor/' + this.value" 
+          class="w-full md:w-96 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">-- Seleccionar una cuenta --</option>
+          <% cuentas.forEach(function(c) { %>
+            <option value="<%= c.id %>" <%= cuenta_id == c.id ? 'selected' : '' %>>
+              <%= c.codigo %> - <%= c.nombre %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <% if (typeof cuenta !== 'undefined' && cuenta) { %>
+        <!-- TARJETA DE CUENTA SELECCIONADA -->
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow p-6 mb-6 border-l-4 border-blue-600">
+          <h2 class="text-2xl font-bold text-gray-900"><%= cuenta.nombre %></h2>
+          <p class="text-sm text-gray-600 mt-1">
+            Código: <span class="font-mono font-semibold text-gray-900"><%= cuenta.codigo %></span> | 
+            Tipo: <span class="text-blue-600 font-semibold"><%= cuenta.tipo %></span>
+          </p>
+        </div>
+
+        <!-- INDICADORES DE SALDO -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-600">
+            <p class="text-sm text-gray-600 font-medium">Total Débito</p>
+            <p class="text-3xl font-bold text-blue-600 mt-2"><%= saldo.debe.toFixed(2) %></p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-600">
+            <p class="text-sm text-gray-600 font-medium">Total Crédito</p>
+            <p class="text-3xl font-bold text-red-600 mt-2"><%= saldo.haber.toFixed(2) %></p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-600">
+            <p class="text-sm text-gray-600 font-medium">Saldo Neto</p>
+            <p class="text-3xl font-bold text-purple-600 mt-2"><%= saldo.neto.toFixed(2) %></p>
+          </div>
+        </div>
+
+        <!-- TABLA DE MOVIMIENTOS -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="bg-gray-100 border-b border-gray-200 px-6 py-4">
+            <h3 class="font-semibold text-gray-900">Movimientos Contables</h3>
+            <p class="text-sm text-gray-600">Historial de débitos y créditos</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="text-left p-4 font-semibold text-gray-700">Fecha</th>
+                  <th class="text-left p-4 font-semibold text-gray-700">N° Asiento</th>
+                  <th class="text-left p-4 font-semibold text-gray-700">Descripción</th>
+                  <th class="text-right p-4 font-semibold text-gray-700">Débito</th>
+                  <th class="text-right p-4 font-semibold text-gray-700">Crédito</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (movimientos.length === 0) { %>
+                  <tr>
+                    <td colspan="5" class="p-6 text-center text-gray-500">
+                      No hay movimientos en esta cuenta
+                    </td>
+                  </tr>
+                <% } else { %>
+                  <% movimientos.forEach(function(m, idx) { %>
+                    <tr class="<%= idx % 2 === 0 ? 'bg-white' : 'bg-gray-50' %> border-b border-gray-200 hover:bg-indigo-50">
+                      <td class="p-4"><%= new Date(m.fecha).toLocaleDateString('es-ES') %></td>
+                      <td class="p-4">
+                        <span class="inline-block bg-blue-600 text-white px-3 py-1 rounded font-bold text-xs">
+                          <%= m.asiento_numero %>
+                        </span>
+                      </td>
+                      <td class="p-4 text-gray-700"><%= m.asiento_desc || '—' %></td>
+                      <td class="text-right p-4 font-semibold text-blue-600">
+                        <%= m.tipo === 'debe' ? m.monto.toFixed(2) : '—' %>
+                      </td>
+                      <td class="text-right p-4 font-semibold text-red-600">
+                        <%= m.tipo === 'haber' ? m.monto.toFixed(2) : '—' %>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- INFORMACIÓN -->
+      <% if (typeof cuenta !== 'undefined' && cuenta) { %>
+        <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <p class="text-sm text-yellow-800">
+            <strong>Nota:</strong> El Libro Mayor muestra el movimiento detallado de cada cuenta. 
+            Saldo Neto = Total Débitos - Total Créditos.
+          </p>
+        </div>
+      <% } %>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-gray-500">
+        &copy; <%= new Date().getFullYear() %> Sistema Contable
+      </div>
+    </footer>
+
+    <script>
+      function exportarCSV() {
+        const tabla = document.querySelector('table');
+        if (!tabla) return;
+        const rows = Array.from(tabla.querySelectorAll('tr'));
+        const csv = rows.map(row => {
+          return Array.from(row.querySelectorAll('td, th'))
+            .map(cell => `"${cell.textContent.trim()}"`)
+            .join(',');
+        }).join('\n');
+        
+        const link = document.createElement('a');
+        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        link.download = 'mayor_' + new Date().toISOString().split('T')[0] + '.csv';
+        link.click();
+      }
+    </script>
+  </body>
+</html>

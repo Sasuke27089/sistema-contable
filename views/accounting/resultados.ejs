@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estado de Resultados - Sistema Contable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-800 min-h-screen">
+    <!-- HEADER -->
+    <header class="bg-white shadow border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Estado de Resultados</h1>
+            <p class="text-sm text-gray-600">Resumen de ingresos, costos y gastos</p>
+          </div>
+          <a href="/dashboard" class="text-indigo-600 hover:text-indigo-700 font-medium">← Volver</a>
+        </div>
+        <nav class="text-sm space-x-4 flex flex-wrap">
+          <a href="/accounting/cuentas" class="text-gray-600 hover:text-indigo-600">Cuentas</a>
+          <a href="/accounting/asientos" class="text-gray-600 hover:text-indigo-600">Asientos</a>
+          <a href="/accounting/diario" class="text-gray-600 hover:text-indigo-600">Diario</a>
+          <a href="/accounting/mayor" class="text-gray-600 hover:text-indigo-600">Mayor</a>
+          <a href="/accounting/balance" class="text-gray-600 hover:text-indigo-600">Balance</a>
+          <a href="/accounting/resultados" class="text-blue-600 font-semibold">Resultados</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-8">
+      <!-- BARRA DE ACCIONES -->
+      <div class="mb-6 flex justify-between items-center flex-wrap gap-3">
+        <div class="flex gap-2">
+          <button onclick="window.print()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 font-medium flex items-center gap-2 shadow transition">
+            <span>🖨️</span> Imprimir
+          </button>
+          <button onclick="exportarPDF()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium flex items-center gap-2 shadow transition">
+            <span>📄</span> Exportar PDF
+          </button>
+        </div>
+        <a href="/dashboard" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium flex items-center gap-2 shadow transition">
+          <span>🚪</span> Salir
+        </a>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
+          <%= error %>
+        </div>
+      <% } else { %>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <!-- ENCABEZADO -->
+          <div class="bg-gradient-to-r from-blue-50 to-blue-100 px-8 py-6 border-b border-gray-200">
+            <h2 class="text-3xl font-bold text-gray-900 text-center">ESTADO DE RESULTADOS</h2>
+            <p class="text-center text-sm text-gray-600 mt-2">Período: <%= new Date().getFullYear() %></p>
+          </div>
+
+          <!-- CONTENIDO -->
+          <div class="p-8">
+            <!-- INGRESOS -->
+            <div class="mb-8">
+              <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-green-500">📊 INGRESOS</h3>
+              <div class="space-y-2 mb-4">
+                <% ingresos.forEach(function(i) { %>
+                  <div class="flex justify-between px-4 py-2 bg-gray-50 rounded hover:bg-green-50">
+                    <span class="text-gray-700"><%= i.nombre %></span>
+                    <span class="font-semibold text-green-600"><%= (i.total_haber || 0).toFixed(2) %></span>
+                  </div>
+                <% }) %>
+              </div>
+              <div class="flex justify-between px-4 py-3 bg-green-100 rounded font-bold text-gray-900 text-lg">
+                <span>Total Ingresos</span>
+                <span class="text-green-700"><%= totalIngresos.toFixed(2) %></span>
+              </div>
+            </div>
+
+            <!-- COSTOS -->
+            <div class="mb-8">
+              <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-orange-500">📦 COSTOS DE VENTA</h3>
+              <div class="space-y-2 mb-4">
+                <% costos.forEach(function(c) { %>
+                  <div class="flex justify-between px-4 py-2 bg-gray-50 rounded hover:bg-orange-50">
+                    <span class="text-gray-700"><%= c.nombre %></span>
+                    <span class="font-semibold text-orange-600"><%= (c.total_debe || 0).toFixed(2) %></span>
+                  </div>
+                <% }) %>
+              </div>
+              <div class="flex justify-between px-4 py-3 bg-orange-100 rounded font-bold text-gray-900 text-lg">
+                <span>Total Costos</span>
+                <span class="text-orange-700"><%= totalCostos.toFixed(2) %></span>
+              </div>
+            </div>
+
+            <!-- UTILIDAD BRUTA -->
+            <div class="mb-8 p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-600">
+              <div class="flex justify-between text-lg font-bold">
+                <span>UTILIDAD BRUTA</span>
+                <span class="text-indigo-600"><%= (totalIngresos - totalCostos).toFixed(2) %></span>
+              </div>
+            </div>
+
+            <!-- GASTOS -->
+            <div class="mb-8">
+              <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-red-500">💸 GASTOS DE OPERACIÓN</h3>
+              <div class="space-y-2 mb-4">
+                <% gastos.forEach(function(g) { %>
+                  <div class="flex justify-between px-4 py-2 bg-gray-50 rounded hover:bg-red-50">
+                    <span class="text-gray-700"><%= g.nombre %></span>
+                    <span class="font-semibold text-red-600"><%= (g.total_debe || 0).toFixed(2) %></span>
+                  </div>
+                <% }) %>
+              </div>
+              <div class="flex justify-between px-4 py-3 bg-red-100 rounded font-bold text-gray-900 text-lg">
+                <span>Total Gastos</span>
+                <span class="text-red-700"><%= totalGastos.toFixed(2) %></span>
+              </div>
+            </div>
+
+            <!-- RESULTADO FINAL -->
+            <div class="p-6 bg-gradient-to-r from-purple-100 to-purple-50 rounded-lg border-2 border-purple-600">
+              <div class="flex justify-between items-center">
+                <span class="text-2xl font-bold text-gray-900">RESULTADO NETO</span>
+                <span class="text-4xl font-bold <%= (totalIngresos - totalCostos - totalGastos) >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                  <%= (totalIngresos - totalCostos - totalGastos).toFixed(2) %>
+                </span>
+              </div>
+              <p class="text-sm text-gray-600 mt-2">
+                <%= (totalIngresos - totalCostos - totalGastos) >= 0 ? '✓ Ganancia' : '✗ Pérdida' %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- INFORMACIÓN -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p class="text-sm text-blue-800">
+            <strong>Cálculo:</strong> Resultado Neto = Ingresos - Costos - Gastos de Operación
+          </p>
+        </div>
+      <% } %>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-5xl mx-auto px-6 py-6 text-center text-sm text-gray-500">
+        &copy; <%= new Date().getFullYear() %> Sistema Contable
+      </div>
+    </footer>
+
+    <script>
+      function exportarPDF() {
+        window.print();
+      }
+    </script>
+  </body>
+</html>

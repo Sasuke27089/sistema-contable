@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Detalle Estado de Cuenta - Sistema Contable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-800 min-h-screen">
+    <!-- HEADER -->
+    <header class="bg-white shadow border-b border-gray-200">
+      <div class="max-w-5xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Estado de Cuenta</h1>
+            <p class="text-sm text-gray-600"><%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.numero_referencia : '' %></p>
+          </div>
+          <a href="/banking" class="text-indigo-600 hover:text-indigo-700 font-medium">← Volver</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-8">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <!-- INFORMACIÓN DEL ESTADO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Referencia</p>
+          <p class="text-xl font-bold text-gray-900"><%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.numero_referencia : 'N/A' %></p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Período</p>
+          <p class="text-lg font-bold text-gray-900">
+            <% if (typeof estado_cuenta !== 'undefined' && estado_cuenta) { %>
+              <%= new Date(estado_cuenta.fecha_desde).toLocaleDateString('es-CO') %> - <%= new Date(estado_cuenta.fecha_hasta).toLocaleDateString('es-CO') %>
+            <% } else { %>
+              N/A
+            <% } %>
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Saldo Inicial</p>
+          <p class="text-lg font-bold text-blue-600">
+            $<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? parseFloat(estado_cuenta.saldo_inicial).toFixed(2) : '0.00' %>
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Saldo Final</p>
+          <p class="text-lg font-bold text-green-600">
+            $<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? parseFloat(estado_cuenta.saldo_final).toFixed(2) : '0.00' %>
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Total Depósitos</p>
+          <p class="text-lg font-bold text-green-600">
+            $<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? parseFloat(estado_cuenta.total_depositos).toFixed(2) : '0.00' %>
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Total Retiros</p>
+          <p class="text-lg font-bold text-red-600">
+            $<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? parseFloat(estado_cuenta.total_retiros).toFixed(2) : '0.00' %>
+          </p>
+        </div>
+      </div>
+
+      <!-- MOVIMIENTOS -->
+      <div class="bg-white rounded-lg shadow mb-8">
+        <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 px-8 py-6 border-b border-gray-200 flex justify-between items-center">
+          <h2 class="text-lg font-bold text-gray-900">Movimientos</h2>
+          <a href="/banking/<%= typeof banco_id !== 'undefined' && banco_id ? banco_id : '#' %>/estado-cuenta/<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.id : '#' %>/importar"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-semibold transition">
+            + Importar CSV
+          </a>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-100 border-b border-gray-200">
+              <tr>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Fecha</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Concepto</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Referencia</th>
+                <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700">Monto</th>
+                <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <% if (typeof movimientos !== 'undefined' && movimientos && movimientos.length > 0) { %>
+                <% movimientos.forEach(mov => { %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                      <%= new Date(mov.fecha).toLocaleDateString('es-CO') %>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <strong><%= mov.concepto %></strong><br>
+                      <span class="text-xs text-gray-500"><%= mov.descripcion %></span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600"><%= mov.referencia %></td>
+                    <td class="px-6 py-4 text-sm text-right font-semibold <%= mov.tipo === 'deposito' ? 'text-green-600' : 'text-red-600' %>">
+                      <%= mov.tipo === 'deposito' ? '+' : '-' %>$<%= parseFloat(mov.monto).toFixed(2) %>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                      <% if (mov.conciliado) { %>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">✓ Conciliado</span>
+                      <% } else { %>
+                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">○ Pendiente</span>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                    No hay movimientos registrados. <a href="/banking/<%= typeof banco_id !== 'undefined' && banco_id ? banco_id : '#' %>/estado-cuenta/<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.id : '#' %>/importar" class="text-blue-600 font-semibold">Importar desde CSV</a>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN -->
+      <div class="flex gap-3 justify-between">
+        <div class="flex gap-3">
+          <a href="/banking" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 font-medium transition flex items-center gap-2 shadow">
+            <span>🔙</span> Volver
+          </a>
+          <button onclick="print()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2 shadow">
+            <span>🖨️</span> Imprimir
+          </button>
+          <button onclick="descargarCSV()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-medium transition flex items-center gap-2 shadow">
+            <span>📥</span> Descargar CSV
+          </button>
+        </div>
+        <a href="/dashboard" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium transition flex items-center gap-2 shadow">
+          <span>🚪</span> Salir
+        </a>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-5xl mx-auto px-6 py-6 text-center text-sm text-gray-500">
+        &copy; <%= new Date().getFullYear() %> Sistema Contable
+      </div>
+    </footer>
+
+    <script>
+      function descargarCSV() {
+        let csv = 'Fecha,Concepto,Referencia,Tipo,Monto\n';
+        <% if (typeof movimientos !== 'undefined' && movimientos) { %>
+          <% movimientos.forEach(mov => { %>
+            csv += '<%= new Date(mov.fecha).toLocaleDateString('es-CO') %>,<%= mov.concepto %>,<%= mov.referencia %>,<%= mov.tipo %>,<%= mov.monto %>\n';
+          <% }); %>
+        <% } %>
+        const link = document.createElement('a');
+        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        link.download = 'movimientos-<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.numero_referencia : 'estado' %>.csv';
+        link.click();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crear Cuenta - Sistema Contable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 text-gray-800 min-h-screen">
+    <header class="bg-white shadow">
+      <div class="max-w-6xl mx-auto px-4 py-4">
+        <a href="/accounting/cuentas" class="text-indigo-600 hover:underline">&larr; Volver a Cuentas</a>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6">
+      <div class="bg-white rounded shadow p-6">
+        <h2 class="text-2xl font-semibold mb-6">Nueva Cuenta</h2>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="bg-red-50 text-red-700 p-3 rounded mb-4"><%= error %></div>
+        <% } %>
+
+        <form method="POST" action="/accounting/cuentas" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Código</label>
+            <input name="codigo" required class="w-full border px-3 py-2 rounded" placeholder="1010" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Nombre</label>
+            <input name="nombre" required class="w-full border px-3 py-2 rounded" placeholder="Caja" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Tipo de Cuenta</label>
+            <select name="tipo" required class="w-full border px-3 py-2 rounded">
+              <option value="">-- Seleccionar --</option>
+              <option value="activo">Activo</option>
+              <option value="pasivo">Pasivo</option>
+              <option value="capital">Capital</option>
+              <option value="ingreso">Ingreso</option>
+              <option value="gasto">Gasto</option>
+              <option value="costo">Costo</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Clase/Subcategoría</label>
+            <input name="clase" class="w-full border px-3 py-2 rounded" placeholder="Bancos" />
+          </div>
+
+          <div class="flex gap-4">
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Crear</button>
+            <a href="/accounting/cuentas" class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="max-w-6xl mx-auto p-6 text-center text-sm text-gray-500">
+      &copy; <%= new Date().getFullYear() %> Sistema Contable
+    </footer>
+  </body>
+</html>
