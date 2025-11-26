@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Contable - Gestión Contable Integral</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fade-in 0.5s ease-in-out; }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-slate-900/50 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-lg">SC</div>
+                <span class="text-xl font-bold">Sistema Contable</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="#features" class="hover:text-indigo-400 transition">Características</a>
+                <a href="#tech" class="hover:text-indigo-400 transition">Tecnología</a>
+                <a href="#get-started" class="hover:text-indigo-400 transition">Comenzar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 sm:py-32">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+            <h1 class="text-5xl sm:text-7xl font-bold mb-6">
+                <span class="gradient-text">Sistema Contable</span>
+            </h1>
+            <p class="text-xl sm:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Solución integral para la gestión contable con autenticación, módulo de banca, reportes avanzados e integración AI
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <a href="#get-started" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 px-8 py-3 rounded-lg font-semibold transition transform hover:scale-105">
+                    Instalar Localmente
+                </a>
+                <a href="https://github.com/Sasuke27089/sistema-contable" target="_blank" class="border border-indigo-400 text-indigo-400 hover:bg-indigo-400/10 px-8 py-3 rounded-lg font-semibold transition">
+                    Ver en GitHub ↗
+                </a>
+            </div>
+
+            <!-- Feature Cards Preview -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-16">
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 hover:border-indigo-500 transition">
+                    <div class="text-3xl mb-2">🔐</div>
+                    <h3 class="text-lg font-semibold mb-2">Autenticación Segura</h3>
+                    <p class="text-gray-400 text-sm">Login con bcrypt y sesiones persistentes</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 hover:border-indigo-500 transition">
+                    <div class="text-3xl mb-2">📊</div>
+                    <h3 class="text-lg font-semibold mb-2">Módulo Contable</h3>
+                    <p class="text-gray-400 text-sm">Cuentas, asientos, reportes y balance</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 hover:border-indigo-500 transition">
+                    <div class="text-3xl mb-2">🏦</div>
+                    <h3 class="text-lg font-semibold mb-2">Módulo de Banca</h3>
+                    <p class="text-gray-400 text-sm">Importación de estados y conciliación</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-slate-800/50 border-t border-slate-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Características Principales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex gap-4">
+                    <div class="text-2xl">✅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Gestión de Cuentas</h3>
+                        <p class="text-gray-400">Crear y organizar cuentas contables por tipo (Activo, Pasivo, Capital, etc.)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-2xl">✅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Asientos Contables</h3>
+                        <p class="text-gray-400">Registro con validación de partida doble automática</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-2xl">✅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Reportes Avanzados</h3>
+                        <p class="text-gray-400">Diario, Mayor, Balance de Prueba, Estado de Resultados, PDF y CSV</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-2xl">✅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Módulo Bancario</h3>
+                        <p class="text-gray-400">Importación de CSV, conciliación automática y reportes</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-2xl">✅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Integración AI</h3>
+                        <p class="text-gray-400">Modo mock integrado, compatible con OpenAI, Anthropic y otros</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-2xl">✅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Interfaz Moderna</h3>
+                        <p class="text-gray-400">Diseño responsive con Tailwind CSS, fácil de usar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Stack Tecnológico</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">🔧</div>
+                    <h3 class="font-semibold">Node.js</h3>
+                    <p class="text-sm text-gray-400">Backend runtime</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">⚡</div>
+                    <h3 class="font-semibold">Express.js</h3>
+                    <p class="text-sm text-gray-400">Framework web</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">💾</div>
+                    <h3 class="font-semibold">SQLite</h3>
+                    <p class="text-sm text-gray-400">Base de datos</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">🎨</div>
+                    <h3 class="font-semibold">Tailwind CSS</h3>
+                    <p class="text-sm text-gray-400">Estilos modernos</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">🔐</div>
+                    <h3 class="font-semibold">Bcrypt</h3>
+                    <p class="text-sm text-gray-400">Seguridad</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">🎯</div>
+                    <h3 class="font-semibold">EJS</h3>
+                    <p class="text-sm text-gray-400">Plantillas</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">📄</div>
+                    <h3 class="font-semibold">PDFKit</h3>
+                    <p class="text-sm text-gray-400">Generación de PDF</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                    <div class="text-4xl mb-3">🤖</div>
+                    <h3 class="font-semibold">AI Ready</h3>
+                    <p class="text-sm text-gray-400">Integración flexible</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section id="get-started" class="py-20 bg-slate-800/50 border-t border-slate-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Guía de Instalación</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Instalación Local -->
+                <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-6">🚀 Instalación Local</h3>
+                    <ol class="space-y-4 text-gray-300">
+                        <li class="flex gap-3">
+                            <span class="font-bold text-indigo-400">1.</span>
+                            <span>Clona el repositorio: <code class="bg-slate-800 px-2 py-1 rounded text-sm">git clone https://github.com/Sasuke27089/sistema-contable.git</code></span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-bold text-indigo-400">2.</span>
+                            <span>Entra en el directorio: <code class="bg-slate-800 px-2 py-1 rounded text-sm">cd sistema-contable</code></span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-bold text-indigo-400">3.</span>
+                            <span>Instala dependencias: <code class="bg-slate-800 px-2 py-1 rounded text-sm">npm install</code></span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-bold text-indigo-400">4.</span>
+                            <span>Inicia el servidor: <code class="bg-slate-800 px-2 py-1 rounded text-sm">npm start</code></span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-bold text-indigo-400">5.</span>
+                            <span>Accede a <code class="bg-slate-800 px-2 py-1 rounded text-sm">http://localhost:3000</code></span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Credenciales de Prueba -->
+                <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-6">🔑 Credenciales de Prueba</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800/50 border border-slate-600 rounded p-4">
+                            <p class="text-sm text-gray-400 mb-1">Usuario</p>
+                            <p class="font-mono text-indigo-300">admin@local</p>
+                        </div>
+                        <div class="bg-slate-800/50 border border-slate-600 rounded p-4">
+                            <p class="text-sm text-gray-400 mb-1">Contraseña</p>
+                            <p class="font-mono text-indigo-300">Admin123!</p>
+                        </div>
+                        <div class="bg-yellow-500/10 border border-yellow-600/50 rounded p-4 mt-4">
+                            <p class="text-sm text-yellow-200">⚠️ Por seguridad, cambia la contraseña después del primer acceso en producción.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requisitos -->
+            <div class="mt-8 bg-slate-900/50 border border-slate-700 rounded-lg p-8">
+                <h3 class="text-xl font-semibold mb-4">📋 Requisitos Previos</h3>
+                <ul class="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-300">
+                    <li class="flex gap-2">
+                        <span>✓</span>
+                        <span>Node.js 18+</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span>✓</span>
+                        <span>npm (incluido con Node.js)</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span>✓</span>
+                        <span>Git para clonar</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots/Demo Section -->
+    <section class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Módulos Principales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-2">📚 Contabilidad</h3>
+                    <p class="text-gray-300 text-sm">Cuentas, asientos, diario, mayor, balance de prueba y estado de resultados con partida doble automática.</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-2">🏦 Banca</h3>
+                    <p class="text-gray-300 text-sm">Gestión de bancos, importación de estados de cuenta en CSV, movimientos y conciliación automática.</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-2">🤖 IA Integrada</h3>
+                    <p class="text-gray-300 text-sm">Modo mock para desarrollo, compatible con OpenAI, Anthropic y proveedores personalizados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-700 bg-slate-900/50 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="font-semibold mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded flex items-center justify-center text-sm font-bold">SC</div>
+                        Sistema Contable
+                    </h4>
+                    <p class="text-gray-400 text-sm">Solución integral para la gestión contable empresarial.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="https://github.com/Sasuke27089/sistema-contable" target="_blank" class="hover:text-indigo-400 transition">GitHub Repositorio</a></li>
+                        <li><a href="#features" class="hover:text-indigo-400 transition">Características</a></li>
+                        <li><a href="#tech" class="hover:text-indigo-400 transition">Tecnología</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Soporte</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="https://github.com/Sasuke27089/sistema-contable/issues" target="_blank" class="hover:text-indigo-400 transition">Reportar Problemas</a></li>
+                        <li><a href="https://github.com/Sasuke27089/sistema-contable/discussions" target="_blank" class="hover:text-indigo-400 transition">Discusiones</a></li>
+                        <li><a href="https://github.com/Sasuke27089" target="_blank" class="hover:text-indigo-400 transition">Perfil del Autor</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-700 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 Sistema Contable. Todos los derechos reservados.</p>
+                <p class="mt-2">Desarrollado con ❤️ usando Node.js, Express y Tailwind CSS</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg opacity-0 hover:opacity-100 transition" id="scrollBtn">
+        ↑
+    </button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollBtn').style.opacity = window.scrollY > 300 ? '1' : '0';
+        });
+    </script>
+</body>
+</html>
