@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm install",
+  "devCommand": "npm start",
+  "outputDirectory": ".",
+  "framework": "express",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "envPrefix": "",
+  "regions": ["iad1"],
+  "public": false
+}

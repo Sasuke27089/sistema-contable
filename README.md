@@ -173,6 +173,48 @@ sistema-contable/
 - **Balance**: Verificar que Debe = Haber → `/accounting/balance`
 - **Resultados**: Ver ingresos, gastos y utilidad neta → `/accounting/resultados`
 
+## 🌐 Despliegue en Producción
+
+Ver guía completa en [`DEPLOYMENT.md`](./DEPLOYMENT.md)
+
+### Opción recomendada: Vercel (Gratis + Dominio personalizado)
+
+**Ventajas:**
+- ✅ Deploy automático desde GitHub
+- ✅ HTTPS incluido
+- ✅ SQLite soportado
+- ✅ Variables de entorno fáciles
+- ✅ Dominio gratis (subdominio) o personalizado
+
+**Pasos rápidos:**
+
+```bash
+# 1. Instalar Vercel CLI
+npm i -g vercel
+
+# 2. Desplegar
+vercel --prod
+
+# 3. Configurar dominio personalizado en https://vercel.com/dashboard
+```
+
+O usa el script automatizado:
+```bash
+bash scripts/deploy.sh
+```
+
+### Otras opciones:
+- **Railway**: $5-10/mes (muy recomendado)
+- **Render**: $7/mes+ 
+- **DigitalOcean**: $5-6/mes (VPS completo)
+
+### Comprar dominio personalizado:
+- Namecheap: ~$10.88/año
+- GoDaddy: ~$14.99/año (primer año)
+- Porkbun: ~$11.52/año
+
+Luego configura DNS records en tu proveedor de dominio apuntando a Vercel/Railway/etc.
+
 ## Credenciales de prueba
 
 - **Usuario**: `admin@local`
