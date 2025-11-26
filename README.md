@@ -43,9 +43,17 @@ npm install
    ADMIN_EMAIL=admin@local
    ADMIN_PASSWORD=Admin123!
    ADMIN_NAME=Admin Interno
-   # AI_API_URL=... (opcional)
-   # AI_API_KEY=... (opcional)
+   # AI_PROVIDER=mock|openai|anthropic (por defecto: mock)
+   # AI_API_URL=... (URL del endpoint del proveedor, si aplica)
+   # AI_API_KEY=... (clave del proveedor, si aplica)
    ```
+
+**Nota sobre IA**: El sistema soporta múltiples proveedores mediante la variable `AI_PROVIDER`.
+- `mock`: modo de desarrollo que devuelve respuestas simuladas (no requiere claves).
+- `openai`: usa `AI_API_URL` y `AI_API_KEY` para enviar prompts al endpoint configurado.
+- `anthropic`: similar a `openai`, puede requerir encabezados distintos según el proveedor.
+
+Para pruebas locales sin claves, deja `AI_PROVIDER=mock` (o no declares `AI_PROVIDER` y el sistema escogerá `mock`). Para usar un proveedor real, establece `AI_PROVIDER=openai` o `AI_PROVIDER=anthropic` y añade `AI_API_URL` y `AI_API_KEY`.
 
 ## Iniciar servidor
 

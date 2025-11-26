@@ -1,30 +1,32 @@
-const axios = require('axios');
+const path = require('path');
 
 function createAIClient() {
-  const API_URL = process.env.AI_API_URL;
-  const API_KEY = process.env.AI_API_KEY;
-  const MODEL = process.env.AI_MODEL || undefined;
+  // Selecciona proveedor por env: AI_PROVIDER (openai|anthropic|mock)
+  const envProvider = (process.env.AI_PROVIDER || '').toLowerCase();
+  const autoDetect = process.env.AI_API_URL && process.env.AI_API_KEY;
+  const providerName = envProvider || (autoDetect ? 'openai' : 'mock');
 
-  if (!API_URL || !API_KEY) {
-    console.warn('AI client no está configurado: configure AI_API_URL y AI_API_KEY en .env');
+  let providerFactory;
+  try {
+    providerFactory = require(path.join(__dirname, 'aiProviders', providerName));
+  } catch (err) {
+    console.warn(`Proveedor AI '${providerName}' no encontrado, usando 'mock'`);
+    providerFactory = require(path.join(__dirname, 'aiProviders', 'mock'));
+  }
+
+  const provider = providerFactory();
+  const configured = !!(provider && provider.configured);
+
+  if (!configured) {
+    console.warn(`AI provider '${provider.name || providerName}' no está configurado. Usa modo 'mock' para desarrollo o establece variables en .env`);
   }
 
   async function sendPrompt(prompt, options = {}) {
-    if (!API_URL || !API_KEY) throw new Error('AI client no configurado');
-
-    const payload = Object.assign({ prompt }, options);
-    if (MODEL) payload.model = MODEL;
-
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${API_KEY}`
-    };
-
-    const res = await axios.post(API_URL, payload, { headers, timeout: 20000 });
-    return res.data;
+    if (!configured) throw new Error(`AI provider '${provider.name || providerName}' no configurado`);
+    return provider.sendPrompt(prompt, options);
   }
 
-  return { sendPrompt };
+  return { sendPrompt, configured, provider: provider.name || providerName };
 }
 
 module.exports = createAIClient;

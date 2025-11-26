@@ -3,6 +3,7 @@ const Banco = require('../models/banco');
 const EstadoCuenta = require('../models/estado_cuenta');
 const MovimientoBanco = require('../models/movimiento_banco');
 const ConciliacionBancaria = require('../models/conciliacion_bancaria');
+const PDFDocument = require('pdfkit');
 
 module.exports = function(db) {
   const router = express.Router();
@@ -193,6 +194,128 @@ module.exports = function(db) {
       res.json({ success: true });
     } catch (err) {
       res.json({ success: false, error: err.message });
+    }
+  });
+
+  // ========== REPORTES ==========
+
+  // CSV de movimientos por estado de cuenta
+  router.get('/:banco_id/estado-cuenta/:estado_id/report/movimientos.csv', async (req, res) => {
+    try {
+      const estado_id = req.params.estado_id;
+      const movimientos = await movimientoBancoModel.obtenerPorEstadoCuenta(estado_id);
+
+      let csv = 'Fecha,Concepto,Descripcion,Referencia,Tipo,Monto,Conciliado\n';
+      for (const m of movimientos) {
+        const fecha = new Date(m.fecha).toISOString().split('T')[0];
+        const concepto = (m.concepto || '').replace(/\r?\n|,/g, ' ');
+        const descripcion = (m.descripcion || '').replace(/\r?\n|,/g, ' ');
+        const referencia = (m.referencia || '').replace(/\r?\n|,/g, ' ');
+        const tipo = m.tipo || '';
+        const monto = parseFloat(m.monto || 0).toFixed(2);
+        const conciliado = m.conciliado ? 'Sí' : 'No';
+        csv += `${fecha},${concepto},${descripcion},${referencia},${tipo},${monto},${conciliado}\n`;
+      }
+
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="movimientos_estado_${estado_id}.csv"`);
+      res.send(csv);
+    } catch (err) {
+      res.status(500).send('Error generando CSV: ' + err.message);
+    }
+  });
+
+  // Vista imprimible de conciliación (HTML listo para imprimir)
+  router.get('/:banco_id/conciliacion/report', async (req, res) => {
+    try {
+      const banco = await bancoModel.obtenerPorId(req.params.banco_id);
+      const conciliaciones = await conciliacionModel.obtenerPorBanco(req.params.banco_id);
+      const movimientos_sin_conciliar = await movimientoBancoModel.obtenerPorBanco(req.params.banco_id);
+      // Renderizar misma vista pero con modo printable
+      res.render('banking/conciliacion', { banco, conciliaciones, movimientos_sin_conciliar, printable: true });
+    } catch (err) {
+      res.status(500).send('Error generando reporte: ' + err.message);
+    }
+  });
+  // PDF: Movimientos por estado de cuenta (generado con PDFKit)
+  router.get('/:banco_id/estado-cuenta/:estado_id/report/movimientos.pdf', async (req, res) => {
+    try {
+      const estado_id = req.params.estado_id;
+      const banco_id = req.params.banco_id;
+      const banco = await bancoModel.obtenerPorId(banco_id);
+      const estado_cuenta = await estadoCuentaModel.obtenerPorId(estado_id);
+      const movimientos = await movimientoBancoModel.obtenerPorEstadoCuenta(estado_id);
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="movimientos_estado_${estado_id}.pdf"`);
+
+      const doc = new PDFDocument({ size: 'A4', margin: 40 });
+      doc.pipe(res);
+
+      doc.fontSize(18).text(`Movimientos - ${banco ? banco.nombre : ''}`, { align: 'left' });
+      doc.moveDown(0.5);
+      doc.fontSize(12).text(`Estado: ${estado_cuenta ? estado_cuenta.numero_referencia : ''}`);
+      doc.text(`Período: ${estado_cuenta ? new Date(estado_cuenta.fecha_desde).toLocaleDateString('es-CO') + ' - ' + new Date(estado_cuenta.fecha_hasta).toLocaleDateString('es-CO') : ''}`);
+      doc.moveDown(0.5);
+
+      // Table header
+      doc.fontSize(10);
+      const tableTop = doc.y + 10;
+      doc.text('Fecha', 40, tableTop, { width: 70, continued: true });
+      doc.text('Concepto', 120, tableTop, { width: 150, continued: true });
+      doc.text('Referencia', 280, tableTop, { width: 80, continued: true });
+      doc.text('Tipo', 370, tableTop, { width: 60, continued: true });
+      doc.text('Monto', 430, tableTop, { width: 80, align: 'right' });
+      doc.moveDown(0.5);
+
+      // Rows
+      movimientos.forEach(m => {
+        const y = doc.y;
+        doc.fontSize(10).text(new Date(m.fecha).toLocaleDateString('es-CO'), 40, y, { width: 70, continued: true });
+        doc.text((m.concepto || '').toString(), 120, y, { width: 150, continued: true });
+        doc.text((m.referencia || '').toString(), 280, y, { width: 80, continued: true });
+        doc.text((m.tipo || '').toString(), 370, y, { width: 60, continued: true });
+        doc.text((parseFloat(m.monto || 0).toFixed(2)), 430, y, { width: 80, align: 'right' });
+        doc.moveDown(0.5);
+      });
+
+      doc.end();
+    } catch (err) {
+      res.status(500).send('Error generando PDF: ' + err.message);
+    }
+  });
+
+  // PDF: Conciliación (generado con PDFKit)
+  router.get('/:banco_id/conciliacion/report.pdf', async (req, res) => {
+    try {
+      const banco_id = req.params.banco_id;
+      const banco = await bancoModel.obtenerPorId(banco_id);
+      const conciliaciones = await conciliacionModel.obtenerPorBanco(banco_id);
+      const movimientos_sin_conciliar = await movimientoBancoModel.obtenerPorBanco(banco_id);
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="conciliacion_banco_${banco_id}.pdf"`);
+
+      const doc = new PDFDocument({ size: 'A4', margin: 40 });
+      doc.pipe(res);
+
+      doc.fontSize(18).text(`Conciliación - ${banco ? banco.nombre : ''}`, { align: 'left' });
+      doc.moveDown(0.5);
+
+      doc.fontSize(12).text('Conciliaciones recientes:');
+      conciliaciones.forEach(c => {
+        doc.fontSize(10).text(`- ${new Date(c.fecha_conciliacion).toLocaleDateString('es-CO')} | Diferencia: $${Math.abs(c.diferencia).toFixed(2)} | Estado: ${c.estado}`);
+      });
+
+      doc.moveDown(1);
+      doc.fontSize(12).text('Movimientos sin conciliar:');
+      movimientos_sin_conciliar.forEach(m => {
+        doc.fontSize(10).text(`- ${new Date(m.fecha).toLocaleDateString('es-CO')} | ${m.concepto} | ${m.referencia} | ${m.tipo} | $${parseFloat(m.monto).toFixed(2)}`);
+      });
+
+      doc.end();
+    } catch (err) {
+      res.status(500).send('Error generando PDF: ' + err.message);
     }
   });
 

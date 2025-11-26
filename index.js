@@ -1,5 +1,3 @@
-  const bankingRoutes = require('./routes/banking')(db);
-  app.use('/banking', bankingRoutes);
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
@@ -54,6 +52,9 @@ const createAIClient = require('./services/aiClient');
   app.use(userRoutes);
   app.use(aiRoutes);
   app.use('/accounting', accountingRoutes);
+
+  const bankingRoutes = require('./routes/banking')(db);
+  app.use('/banking', bankingRoutes);
 
   // start server
   const PORT = process.env.PORT || 3000;

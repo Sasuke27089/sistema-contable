@@ -136,8 +136,14 @@
             <span>🖨️</span> Imprimir
           </button>
           <button onclick="descargarCSV()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-medium transition flex items-center gap-2 shadow">
-            <span>📥</span> Descargar CSV
+            <span>📥</span> Descargar CSV (cliente)
           </button>
+          <a href="/banking/<%= typeof banco !== 'undefined' && banco ? banco.id : '#' %>/estado-cuenta/<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.id : '#' %>/report/movimientos.csv" class="bg-green-800 text-white px-6 py-2 rounded-lg hover:bg-green-900 font-medium transition flex items-center gap-2 shadow">
+            <span>⬇️</span> Descargar CSV (servidor)
+          </a>
+          <a href="/banking/<%= typeof banco !== 'undefined' && banco ? banco.id : '#' %>/estado-cuenta/<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.id : '#' %>/report/movimientos.pdf" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-medium transition flex items-center gap-2 shadow">
+            <span>📄</span> Descargar PDF
+          </a>
         </div>
         <a href="/dashboard" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium transition flex items-center gap-2 shadow">
           <span>🚪</span> Salir
@@ -154,14 +160,14 @@
     <script>
       function descargarCSV() {
         let csv = 'Fecha,Concepto,Referencia,Tipo,Monto\n';
-        <% if (typeof movimientos !== 'undefined' && movimientos) { %>
+        <% if (typeof movimientos !== 'undefined' && movimientos && movimientos.length > 0) { %>
           <% movimientos.forEach(mov => { %>
-            csv += '<%= new Date(mov.fecha).toLocaleDateString('es-CO') %>,<%= mov.concepto %>,<%= mov.referencia %>,<%= mov.tipo %>,<%= mov.monto %>\n';
+            csv += '<%- new Date(mov.fecha).toLocaleDateString("es-CO") %>,<%- mov.concepto %>,<%- mov.referencia %>,<%- mov.tipo %>,<%- mov.monto %>\n';
           <% }); %>
         <% } %>
         const link = document.createElement('a');
         link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-        link.download = 'movimientos-<%= typeof estado_cuenta !== 'undefined' && estado_cuenta ? estado_cuenta.numero_referencia : 'estado' %>.csv';
+        link.download = 'movimientos-<%- typeof estado_cuenta !== "undefined" && estado_cuenta ? estado_cuenta.numero_referencia : "estado" %>.csv';
         link.click();
       }
     </script>
